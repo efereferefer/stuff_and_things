@@ -1,0 +1,6 @@
+start,start,start,already started
+start,echo,echo,"echo regime, type exit to go back"
+start,Pesh,start, Trap
+start,any,start,avalible commands: echo
+echo,exit,start, back to menu
+echo,any,echo,echo

@@ -8,11 +8,11 @@ bot = telebot.TeleBot(token)
 
 @bot.message_handler(commands=['start'])
 def start_message(message):
-    bot.send_message(message.chat.id, "Привет")
+    bot.send_message(message.chat.id, BotProcessor.GiveMessage())
 
 @bot.message_handler(content_types='text')
 def message_reply(message):
-    BotProcessor.Process(message)
+    BotProcessor.Process(message.text)
     bot.send_message(message.chat.id, BotProcessor.GiveMessage())
 
 bot.infinity_polling()
