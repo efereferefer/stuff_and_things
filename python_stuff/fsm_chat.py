@@ -37,7 +37,7 @@ class FSM_chat:
             CsvRead.seek(0)
             for row in CsvRead:    
                 if self._State == row[1]:
-                    if self._Input == row[2]:
+                    if self._Input == row[2] or row[2] == "any":
                         self._State == row[3]
                         self._Message == row[4]
                         Found = True
