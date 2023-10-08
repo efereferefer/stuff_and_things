@@ -42,7 +42,6 @@ class Quternion:
                 dimList.append("/")
                 dimList.append(str(self.dims[i][1]))
             dimList.append(self.dimentionNames[i])
-            dimList.append(self.dimentionNames[i])
             dimStr = "".join(dimList)
             resultStringList.append(dimStr)
         resultString = "+".join(resultStringList)
