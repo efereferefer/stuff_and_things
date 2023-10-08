@@ -34,12 +34,15 @@ class Quternion:
     def print(self):
         resultStringList = []
         for i in range(0,len(self.dims)):
+            if self.dims[i][0] == 1:
+                continue
             dimList = []
-            dimList.append(self.dimentionNames[i])
             dimList.append(str(self.dims[i][0]))
             if self.dims[i][1]!= 1:
                 dimList.append("/")
                 dimList.append(str(self.dims[i][1]))
+            dimList.append(self.dimentionNames[i])
+            dimList.append(self.dimentionNames[i])
             dimStr = "".join(dimList)
             resultStringList.append(dimStr)
         resultString = "+".join(resultStringList)
@@ -51,7 +54,18 @@ class Quternion:
             if self.dims[i][1] == other.dims[i][1]:
                 self.dims[i][0]+=other.dims[i][0]
                 continue
-            self.dims[i][0] = int(other.dims[i][0]*self.dims[i][1] + other.dims[i][0]*self.dims[i][1] ) 
+            self.dims[i][0] = int(other.dims[i][0]*self.dims[i][1] + other.dims[i][1]*self.dims[i][0] ) 
+            self.dims[i][1] *= other.dims[i][1] 
+            self.dims[i][1] = int(self.dims[i][1])
+        self.__simplify()
+        return self
+    
+    def __sub__(self,other):
+        for i in range(len(other.dims)):
+            if self.dims[i][1] == other.dims[i][1]:
+                self.dims[i][0]-=other.dims[i][0]
+                continue
+            self.dims[i][0] = int(other.dims[i][1]*self.dims[i][0] - other.dims[i][0]*self.dims[i][1]) 
             self.dims[i][1] *= other.dims[i][1] 
             self.dims[i][1] = int(self.dims[i][1])
         self.__simplify()
