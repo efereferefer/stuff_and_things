@@ -10,7 +10,7 @@ def getPrimeDividers(number):
 def intersectionList(list1, list2): 
    return set(list1).intersection(list2)
 
-class Quternion:
+class Quaternion:
     dimentionNames = ["","i","j","k"]
     #initializer
     def __init__(self,defString) -> None:
