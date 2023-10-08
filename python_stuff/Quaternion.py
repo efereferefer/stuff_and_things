@@ -1,49 +1,74 @@
 def getPrimeDividers(number):
-    result = list
+    result = []
     i = 2
-    while i*i < number:
+    while i*i <= number:
         if number%i == 0: result.append(i)
         number /= i
     if number > 1: result.append(number)
-    return number
+    return result
 
 def intersectionList(list1, list2): 
    return set(list1).intersection(list2)
 
 class Quternion:
     dimentionNames = ["","i","j","k"]
+    #initializer
     def __init__(self,defString) -> None:
         dims = defString.split(";")
         if len(dims)>4: return "Too much dimensions"
-        for dim in dims:
-            dim = dim.split(",")
+        for i in range(0,len(dims)):
+            dim = dims[i].split(",")
             if type(dim) == list:
                 if len(dim) == 2:
+                   dims[i] = []
+                   dims[i].append(int(dim[0]))
+                   dims[i].append(int(dim[1]))
                    continue
             return "Wrong dimensions"
         self.dims = dims
-        self.simplify()
+        while len(self.dims) < 4:
+            self.dims.append([0,1])
+        self.__simplify()
 
+    #interaface functiions
     def print(self):
-        resultStringList = list
-        for dim in self.dims:
-            dimList = list
-            dimList.append(self.dimentionNames[self.dims.index(dim)])
-            dimList.append(str(dim[0]))
-            dimList.append("/")
-            dimList.append(str(dim[1]))
+        resultStringList = []
+        for i in range(0,len(self.dims)):
+            dimList = []
+            dimList.append(self.dimentionNames[i])
+            dimList.append(str(self.dims[i][0]))
+            if self.dims[i][1]!= 1:
+                dimList.append("/")
+                dimList.append(str(self.dims[i][1]))
             dimStr = "".join(dimList)
             resultStringList.append(dimStr)
         resultString = "+".join(resultStringList)
         print(resultString)
-        
-    def simplify(self):
-        for dim in self.dims:
-            numeratorDividers = getPrimeDividers(dim[0])
-            denominatorDividers = getPrimeDividers(dim[1])
-            commonDividers = intersectionList(numeratorDividers,denominatorDividers)
-            for divider in commonDividers:
-                dim[0]/=divider
-                dim[1]/=divider 
 
+    #operators
+    def __add__(self,other):
+        for i in range(len(other.dims)):
+            if self.dims[i][1] == other.dims[i][1]:
+                self.dims[i][0]+=other.dims[i][0]
+                continue
+            self.dims[i][0] = int(other.dims[i][0]*self.dims[i][1] + other.dims[i][0]*self.dims[i][1] ) 
+            self.dims[i][1] *= other.dims[i][1] 
+            self.dims[i][1] = int(self.dims[i][1])
+        self.__simplify()
+        return self
+    
+    # private functions    
+    def __simplify(self):
+        for i in range(0,len(self.dims)):
+            numeratorDividers = getPrimeDividers(self.dims[i][0])
+            denominatorDividers = getPrimeDividers(self.dims[i][1])
+            commonDividers = intersectionList(numeratorDividers,denominatorDividers)
+            if len(commonDividers) == 0:
+                return
+            for divider in commonDividers:
+                self.dims[i][0]/=divider
+                self.dims[i][0] = int(self.dims[i][0])
+                self.dims[i][1]/=divider 
+                self.dims[i][1] = int(self.dims[i][1])
+        self.__simplify() 
 
