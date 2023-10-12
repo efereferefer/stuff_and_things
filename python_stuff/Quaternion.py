@@ -91,6 +91,7 @@ class Quaternion:
             dimStr = "".join(dimList)
             resultStringList.append(dimStr)
         resultString = "+".join(resultStringList).replace("+-","-")
+        if resultString == "": resultString = "0"
         return resultString
     
     def __simplify(self):
