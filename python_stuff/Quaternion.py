@@ -1,15 +1,3 @@
-def getPrimeDividers(number):
-    result = []
-    i = 2
-    while i*i <= number:
-        if number%i == 0: result.append(i)
-        number /= i
-    if number > 1: result.append(number)
-    return result
-
-def intersectionList(list1, list2): 
-   return set(list1).intersection(list2)
-
 class Quaternion:
     __dimentionNames = ["","i","j","k"]
     __mulNegativesTable = [[1,1,1,1],[1,-1,1,-1],[1,-1,-1,1],[1,1,-1,-1]]
@@ -82,7 +70,7 @@ class Quaternion:
                 result+=Quaternion.__getSingleMult(self.dims[i],other.dims[j],i,j)
         return result
 
-    # private functions    
+    # private methods    
     def __getSingleMult(num1,num2,ind1,ind2):
         result = [[0,1],[0,1],[0,1],[0,1]]
         resultIndex = 0
@@ -92,12 +80,13 @@ class Quaternion:
         neg = Quaternion.__mulNegativesTable[ind2][ind1]
         result[resultIndex] = [neg*(num1[0]*num2[0]),num1[1]*num2[1]]
         return Quaternion(result)
-
+    
+    #class methods
     def __simplify(self):
         for i in range(0,len(self.dims)):
-            numeratorDividers = getPrimeDividers(self.dims[i][0])
-            denominatorDividers = getPrimeDividers(self.dims[i][1])
-            commonDividers = intersectionList(numeratorDividers,denominatorDividers)
+            numeratorDividers = Quaternion.__getPrimeDividers(self.dims[i][0])
+            denominatorDividers = Quaternion.__getPrimeDividers(self.dims[i][1])
+            commonDividers = Quaternion.__intersectionList(numeratorDividers,denominatorDividers)
             if len(commonDividers) == 0:
                 return
             for divider in commonDividers:
@@ -109,4 +98,16 @@ class Quaternion:
 
     def __dimsToString(dims):
         return ";".join([",".join(list(map(str,t))) for t in dims])
+    
+    def __getPrimeDividers(number):
+        result = []
+        i = 2
+        while i*i <= number:
+            if number%i == 0: result.append(i)
+            number /= i
+        if number > 1: result.append(number)
+        return result
+
+    def __intersectionList(list1, list2): 
+        return set(list1).intersection(list2)
 
