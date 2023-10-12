@@ -77,6 +77,7 @@ class Quaternion:
         indSum = abs(ind1+ind2)
         if indSum<=3: resultIndex = Quaternion.__indList[indSum]
         if indSum>3: resultIndex =  Quaternion.__indList[-indSum]
+        if ind1==ind2: resultIndex = 0
         neg = Quaternion.__mulNegativesTable[ind2][ind1]
         result[resultIndex] = [neg*(num1[0]*num2[0]),num1[1]*num2[1]]
         return Quaternion(result)
