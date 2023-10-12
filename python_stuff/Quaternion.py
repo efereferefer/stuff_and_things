@@ -86,7 +86,6 @@ class Quaternion:
         resultString = "+".join(resultStringList).replace("+-","-")
         return resultString
     
-    #class methods
     def __simplify(self):
         for i in range(0,len(self.dims)):
             numeratorDividers = Quaternion.__getPrimeDividers(self.dims[i][0])
@@ -100,6 +99,8 @@ class Quaternion:
                 self.dims[i][1]/=divider 
                 self.dims[i][1] = int(self.dims[i][1])
         self.__simplify() 
+
+    #static methods
 
     @staticmethod 
     def __dimsToString(dims):
