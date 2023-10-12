@@ -98,7 +98,7 @@ class Quaternion:
             if self.dims[i][0] < 0 and self.dims[i][1] < 0:
                 self.dims[i][0] *= -1
                 self.dims[i][1] *= -1 
-            if self.dims[i][0] == self.dims[i][1] < 0:
+            if self.dims[i][0] == self.dims[i][1]:
                 self.dims[i][0] = 1
                 self.dims[i][1] = 1 
             numeratorDividers = Quaternion.__getPrimeDividers(self.dims[i][0])
