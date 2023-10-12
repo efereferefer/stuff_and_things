@@ -24,23 +24,13 @@ class Quaternion:
 
     #interaface functiions
     def print(self):
-        resultStringList = []
-        for i in range(0,len(self.dims)):
-            if self.dims[i][0] == 0:
-                continue
-            dimList = []
-            dimList.append(str(self.dims[i][0]))
-            if self.dims[i][1]!= 1:
-                dimList.append("/")
-                dimList.append(str(self.dims[i][1]))
-            dimList.append(self.__dimentionNames[i])
-            dimStr = "".join(dimList)
-            resultStringList.append(dimStr)
-        resultString = "+".join(resultStringList).replace("+-","-")
-        
-        print(resultString)
+        print(self.__getString())
 
     #operators
+
+    def __str__(self) -> str:
+        return self.__getString()
+
     def __add__(self,other):
         result = [[0,1],[0,1],[0,1],[0,1]]
         for i in range(len(other.dims)):
@@ -71,6 +61,23 @@ class Quaternion:
         return result
 
     # private methods    
+
+    def __getString(self):
+        resultStringList = []
+        for i in range(0,len(self.dims)):
+            if self.dims[i][0] == 0:
+                continue
+            dimList = []
+            dimList.append(str(self.dims[i][0]))
+            if self.dims[i][1]!= 1:
+                dimList.append("/")
+                dimList.append(str(self.dims[i][1]))
+            dimList.append(self.__dimentionNames[i])
+            dimStr = "".join(dimList)
+            resultStringList.append(dimStr)
+        resultString = "+".join(resultStringList).replace("+-","-")
+        return resultString
+    
     def __getSingleMult(num1,num2,ind1,ind2):
         result = [[0,1],[0,1],[0,1],[0,1]]
         resultIndex = 0
