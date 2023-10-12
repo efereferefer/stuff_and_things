@@ -1,3 +1,5 @@
+from math import sqrt 
+
 class Quaternion:
     __dimentionNames = ["","i","j","k"]
     __mulNegativesTable = [[1,1,1,1],[1,-1,1,-1],[1,-1,-1,1],[1,1,-1,-1]]
@@ -23,6 +25,12 @@ class Quaternion:
         self.__simplify()
 
     #interaface functiions
+    def len(self):
+        result = 0
+        for dim in self.dims:
+            result += float(dim[0]/dim[1])*float(dim[0]/dim[1])
+        return sqrt(result)
+
     def print(self):
         print(self.__getString())
     
