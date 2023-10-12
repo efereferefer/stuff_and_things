@@ -25,8 +25,16 @@ class Quaternion:
     #interaface functiions
     def print(self):
         print(self.__getString())
+    
+    def conjoined(self):
+        result = -self
+        result.dims[0][0] *=1
+        return result
 
     #operators
+
+    def __neg__(self):
+        return Quaternion(list(map(lambda x:[-x[0],x[1]],self.dims)))
 
     def __str__(self) -> str:
         return self.__getString()
