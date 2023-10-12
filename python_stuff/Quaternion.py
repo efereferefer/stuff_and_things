@@ -86,7 +86,7 @@ class Quaternion:
         for i in range(0,len(self.dims)):
             numeratorDividers = Quaternion.__getPrimeDividers(self.dims[i][0])
             denominatorDividers = Quaternion.__getPrimeDividers(self.dims[i][1])
-            commonDividers = Quaternion.__intersectionList(numeratorDividers,denominatorDividers)
+            commonDividers = set(numeratorDividers).intersection(denominatorDividers)
             if len(commonDividers) == 0:
                 return
             for divider in commonDividers:
@@ -108,6 +108,4 @@ class Quaternion:
         if number > 1: result.append(number)
         return result
 
-    def __intersectionList(list1, list2): 
-        return set(list1).intersection(list2)
 
