@@ -28,11 +28,19 @@ class Quaternion:
     
     def conjoined(self):
         result = -self
-        result.dims[0][0] *=1
+        result.dims[0][0] *=-1
         return result
+    
+    def conjoinedMult(self):
+        return (self*self.conjoined()).dims[0][0]
 
     #operators
+    def __truediv__(self,other):
+        return Quaternion([[x[0],x[1]*other.conjoinedMult()] for x in (self*other.conjoined()).dims])
 
+    def __eq__(self, other) -> bool:
+        return self.dims == other.dims
+    
     def __neg__(self):
         return Quaternion(list(map(lambda x:[-x[0],x[1]],self.dims)))
 
@@ -73,8 +81,7 @@ class Quaternion:
     def __getString(self):
         resultStringList = []
         for i in range(0,len(self.dims)):
-            if self.dims[i][0] == 0:
-                continue
+            if self.dims[i][0] == 0: continue
             dimList = []
             dimList.append(str(self.dims[i][0]))
             if self.dims[i][1]!= 1:
@@ -88,6 +95,12 @@ class Quaternion:
     
     def __simplify(self):
         for i in range(0,len(self.dims)):
+            if self.dims[i][0] < 0 and self.dims[i][1] < 0:
+                self.dims[i][0] *= -1
+                self.dims[i][1] *= -1 
+            if self.dims[i][0] == self.dims[i][1] < 0:
+                self.dims[i][0] = 1
+                self.dims[i][1] = 1 
             numeratorDividers = Quaternion.__getPrimeDividers(self.dims[i][0])
             denominatorDividers = Quaternion.__getPrimeDividers(self.dims[i][1])
             commonDividers = set(numeratorDividers).intersection(denominatorDividers)
@@ -99,8 +112,20 @@ class Quaternion:
                 self.dims[i][1]/=divider 
                 self.dims[i][1] = int(self.dims[i][1])
         self.__simplify() 
-
+    
     #static methods
+
+    @staticmethod 
+    def __getSingleMult(num1,num2,ind1,ind2):
+        result = [[0,1],[0,1],[0,1],[0,1]]
+        resultIndex = 0
+        indSum = abs(ind1+ind2)
+        if indSum<=3: resultIndex = Quaternion.__indList[indSum]
+        if indSum>3: resultIndex =  Quaternion.__indList[-indSum]
+        if ind1==ind2: resultIndex = 0
+        neg = Quaternion.__mulNegativesTable[ind2][ind1]
+        result[resultIndex] = [neg*(num1[0]*num2[0]),num1[1]*num2[1]]
+        return Quaternion(result)
 
     @staticmethod 
     def __dimsToString(dims):
@@ -116,16 +141,6 @@ class Quaternion:
         if number > 1: result.append(number)
         return result
     
-    @staticmethod
-    def __getSingleMult(num1,num2,ind1,ind2):
-        result = [[0,1],[0,1],[0,1],[0,1]]
-        resultIndex = 0
-        indSum = abs(ind1+ind2)
-        if indSum<=3: resultIndex = Quaternion.__indList[indSum]
-        if indSum>3: resultIndex =  Quaternion.__indList[-indSum]
-        if ind1==ind2: resultIndex = 0
-        neg = Quaternion.__mulNegativesTable[ind2][ind1]
-        result[resultIndex] = [neg*(num1[0]*num2[0]),num1[1]*num2[1]]
-        return Quaternion(result)
+
 
 
