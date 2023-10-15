@@ -33,24 +33,30 @@ class Quaternion:
 
     def print(self):
         print(self.__getString())
+
+    def getConjoined(self):
+        return self.conjoined().__getString()
+    
+    def getConjoinedMult(self):
+        return (self*self.conjoined())
     
     def conjoined(self):
         result = -self
         result.dims[0][0] *=-1
         return result
-    
+
     def conjoinedMult(self):
-        return (self*self.conjoined()).dims[0][0]
+        return (self*self.conjoined()).dims[0]
 
     #operators
     def __truediv__(self,other):
-        return Quaternion([[x[0],x[1]*other.conjoinedMult()] for x in (self*other.conjoined()).dims])
+        return Quaternion([[x[0]*other.conjoinedMult()[1],x[1]*other.conjoinedMult()[0]] for x in (self*other.conjoined()).dims])
 
     def __eq__(self, other) -> bool:
         return self.dims == other.dims
     
     def __neg__(self):
-        return Quaternion(list(map(lambda x:[-x[0],x[1]],self.dims)))
+        return Quaternion([[-x[0],x[1]] for x in self.dims])
 
     def __str__(self) -> str:
         return self.__getString()
