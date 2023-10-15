@@ -1,4 +1,4 @@
-from math import sqrt 
+from math import sqrt
 
 class Quaternion:
     __dimentionNames = ["","i","j","k"]
@@ -6,7 +6,7 @@ class Quaternion:
     __indList = [0,1,2,3,2,1,0]
 
     #initializer
-    def __init__(self,defString) -> None:
+    def __init__(self,defString, temporary = False) -> None:
         if type(defString) == list: defString = Quaternion.__dimsToString(defString)
         dims = defString.split(";")
         if len(dims)>4: print("Too much dimensions")
@@ -23,16 +23,19 @@ class Quaternion:
         while len(self.dims) < 4:
             self.dims.append([0,1])
         self.__simplify()
+        if not temporary:
+            self.__string = self.__getString()
+            self.__conjoinedMult = (self*self.conjoined()).dims[0]
+            self.__len = 0
+            for dim in self.dims:
+                self.__len += float(dim[0]/dim[1])*float(dim[0]/dim[1])
 
     #interaface functiions
     def len(self):
-        result = 0
-        for dim in self.dims:
-            result += float(dim[0]/dim[1])*float(dim[0]/dim[1])
-        return sqrt(result)
+        return self.__len
 
     def print(self):
-        print(self.__getString())
+        print(self.__string)
 
     def getConjoined(self):
         return self.conjoined().__getString()
@@ -46,7 +49,7 @@ class Quaternion:
         return result
 
     def conjoinedMult(self):
-        return (self*self.conjoined()).dims[0]
+        return self.__conjoinedMult
 
     #operators
     def __truediv__(self,other):
@@ -59,7 +62,7 @@ class Quaternion:
         return Quaternion([[-x[0],x[1]] for x in self.dims])
 
     def __str__(self) -> str:
-        return self.__getString()
+        return self.__string
 
     def __add__(self,other):
         result = [[0,1],[0,1],[0,1],[0,1]]
@@ -148,7 +151,7 @@ class Quaternion:
         if ind1==ind2: resultIndex = 0
         neg = Quaternion.__mulNegativesTable[ind2][ind1]
         result[resultIndex] = [neg*(num1[0]*num2[0]),num1[1]*num2[1]]
-        return Quaternion(result)
+        return Quaternion(result,True)
 
     @staticmethod 
     def __dimsToString(dims):
