@@ -25,7 +25,6 @@ class Quaternion:
         self.__simplify()
         if not temporary:
             self.__string = self.__getString()
-            self.__conjoinedMult = (self*self.conjoined()).dims[0]
             self.__len = 0
             for dim in self.dims:
                 self.__len += float(dim[0]/dim[1])*float(dim[0]/dim[1])
@@ -52,18 +51,7 @@ class Quaternion:
         return self.__conjoinedMult
 
     #operators
-    def __truediv__(self,other):
-        return Quaternion([[x[0]*other.conjoinedMult()[1],x[1]*other.conjoinedMult()[0]] for x in (self*other.conjoined()).dims])
-
-    def __eq__(self, other) -> bool:
-        return self.dims == other.dims
-    
-    def __neg__(self):
-        return Quaternion([[-x[0],x[1]] for x in self.dims])
-
-    def __str__(self) -> str:
-        return self.__string
-
+    #math dual
     def __add__(self,other):
         result = [[0,1],[0,1],[0,1],[0,1]]
         for i in range(len(other.dims)):
@@ -93,6 +81,28 @@ class Quaternion:
                 result+=Quaternion.__getSingleMult(self.dims[i],other.dims[j],i,j)
         return result
 
+    def __truediv__(self,other):
+        return Quaternion([[x[0]*other.conjoinedMult()[1],x[1]*other.conjoinedMult()[0]] for x in (self*other.conjoined()).dims])
+
+    #logical
+    def __eq__(self, other) -> bool:
+        return self.dims == other.dims
+    
+    #single
+    def __neg__(self):
+        return Quaternion([[-x[0],x[1]] for x in self.dims])
+
+    #dynamic typisation
+    def __str__(self) -> str:
+        return self.__string
+
+    def __bool__(self)-> bool:
+        return self.__len != 0
+    
+    #other
+    def __repr__(self) -> str:
+        return self.__string
+
     # private methods    
 
     def __getString(self):
@@ -100,7 +110,8 @@ class Quaternion:
         for i in range(0,len(self.dims)):
             if self.dims[i][0] == 0: continue
             dimList = []
-            dimList.append(str(self.dims[i][0]))
+            if self.dims[i][0] < -1 or self.dims[i][0] > 1 or i > 0:
+                dimList.append(str(self.dims[i][0]))
             if self.dims[i][1]!= 1:
                 dimList.append("/")
                 dimList.append(str(self.dims[i][1]))
